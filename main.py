@@ -12,13 +12,14 @@ client = commands.Bot(command_prefix='/', intents=intents)
 
 
 class RerollButton(discord.ui.Button):
-    def __init__(self, pool, hunger, difficulty, failures, hunger_results):
+    def __init__(self, pool, hunger, difficulty, failures, hunger_results, successes):
         super().__init__(label="Reroll Failures", style=discord.ButtonStyle.green)
         self.pool = pool
         self.hunger = hunger
         self.difficulty = difficulty
         self.failures = failures
         self.hunger_results = hunger_results
+        self.successes = successes
 
     async def callback(self, interaction: discord.Interaction):
 
@@ -36,7 +37,7 @@ class RerollButton(discord.ui.Button):
         result_str = ", ".join(map(str, new_results))
         successes_str = ", ".join(map(str, successful_rolls))
 
-        rerolled_pairs = [f"{fail}> {rerolled}" for fail, rerolled in zip(self.failures[:reroll_len], results)]
+        rerolled_pairs = [f"{fail} > {rerolled}" for fail, rerolled in zip(self.failures[:reroll_len], results)]
         rerolled_str = ", ".join(rerolled_pairs)
 
         hunger_embed = discord.Embed(title=f"Willpower Reroll for {interaction.user.name}",
@@ -46,7 +47,7 @@ class RerollButton(discord.ui.Button):
         hunger_embed.add_field(name="Hunger Dice Results", value=", ".join(map(str, self.hunger_results)), inline=False)
 
         hunger_embed.add_field(name="Successful Rolls", value=successes_str, inline=False)
-        hunger_embed.add_field(name="Total Successes", value=str(success_count), inline=False)
+        hunger_embed.add_field(name="Total Successes", value=str(success_count + self.successes), inline=False)
 
         if critical > 0:
             hunger_embed.add_field(name="CRIT!", value="You have Crit!", inline=True)
@@ -69,6 +70,10 @@ async def barely(ctx):
 
 def get_random_message():
     return random.choice(diceMockeries.combat_failures)
+
+
+def get_rizz_fail():
+    return random.choice(diceMockeries.rizz_failures)
 
 
 def get_dirty_talk():
@@ -113,7 +118,9 @@ async def roll(ctx, pool: int, hunger: int = 0, difficulty: int = 6, style: str 
 
     failures = [roll for roll in results if roll < 6]
 
-    if success_count < difficulty:
+    if success_count < difficulty and style == "r":
+        message = get_rizz_fail()
+    elif success_count < difficulty:
         message = get_random_message()
     elif success_count > difficulty and style == "r":
         message = get_dirty_talk()
@@ -124,7 +131,7 @@ async def roll(ctx, pool: int, hunger: int = 0, difficulty: int = 6, style: str 
 
     hunger_embed.add_field(name="Salt of the day:", value=message, inline=False)
     if len(failures) > 0:
-        reroll_button = RerollButton(pool, hunger, difficulty, failures, hunger_results)
+        reroll_button = RerollButton(pool, hunger, difficulty, failures, hunger_results, success_count)
         view = discord.ui.View()
         view.add_item(reroll_button)
         await ctx.send(embed=hunger_embed, view=view)

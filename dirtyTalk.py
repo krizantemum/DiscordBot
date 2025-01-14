@@ -6,7 +6,7 @@ dirty_talk_successes = [
     "Oscar'lara Türkiye'den aday gösteriyim mi seni bu gece he? Ne diyon?",
     "Sık kullanılanlara ekleyeyim mi seni bu gece? He? Açılış sayfası yapayım mı seni? He, ne diyon?",
     "Erken final yapalım mı? He? Saçmalama muzur! O senin dediğin SGK'lı olursan ücretsiz. Artık sistem çok "
-    "değişti.Tabii.",
+    "/roldeğişti.Tabii.",
     "Bilgisayarını toplayayım mı bu gece? He? RAM'ini arttırıyım mı?",
     "Geceyi havasız bırakalım mı?",
     "Mürdüm eriği gibi kuruyup kalalım mı bu gece? He? Tadı geldi ağzıma direkt yemin ediyom...",
