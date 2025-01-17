@@ -72,8 +72,16 @@ def get_random_message():
     return random.choice(diceMockeries.combat_failures)
 
 
+def get_combat_success():
+    return random.choice(flattries.combat_success)
+
+
 def get_rizz_fail():
     return random.choice(diceMockeries.rizz_failures)
+
+
+def get_combat_fail():
+    return random.choice(diceMockeries.combat_failures)
 
 
 def get_dirty_talk():
@@ -120,10 +128,14 @@ async def roll(ctx, pool: int, hunger: int = 0, difficulty: int = 6, style: str 
 
     if success_count < difficulty and style == "r":
         message = get_rizz_fail()
+    elif success_count < difficulty and style == "c":
+        message = get_combat_fail()
     elif success_count < difficulty:
         message = get_random_message()
     elif success_count > difficulty and style == "r":
         message = get_dirty_talk()
+    elif success_count > difficulty and style == "c":
+        message = get_combat_success()
     elif success_count > difficulty:
         message = get_flattery()
     else:
